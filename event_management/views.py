@@ -23,15 +23,17 @@ def dashboard(request):
     return HttpResponse(str(func.getAllEvents()))
 
 
-# @csrf_exempt
 def event(request):
     ''' admin panal handle event request '''
+    # if request.method == "GET":
+    #     if 'username' in request.session:
+    #         html = func.generateAllEventList()
+    #         return HttpResponse(html)
+    #     else:
+    #         return HttpResponse("INVALID")
     if request.method == "GET":
-        if 'username' in request.session:
-            html = func.generateAllEventList()
-            return HttpResponse(html)
-        else:
-            return HttpResponse("INVALID")
+        html = func.generateAllEventList()
+        return HttpResponse(html)
 
     elif request.method == "POST":
         data = ast.literal_eval(request.body)
