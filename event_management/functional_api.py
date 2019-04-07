@@ -1,3 +1,4 @@
+#!/bin/puthon
 from event_management.models import UserInfo, Event
 import time
 
@@ -50,7 +51,7 @@ class FunctionAPI(object):
             obj.save()
             return True
         except Exception as e:
-            print e
+            print(e)
             return False
 
     def getEventCapacity(self, eventid):
@@ -63,7 +64,7 @@ class FunctionAPI(object):
             Event.objects.filter(id=eventid).update(capacity=currentCapacity)
             return True
         except Exception as e:
-            print e
+            print(e)
             return False
 
     # def getMyEvents(self, username):

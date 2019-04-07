@@ -1,17 +1,29 @@
 from django.http import HttpResponse
+from django.shortcuts import render
 import ast
+from django.views.generic import TemplateView # Import TemplateView
 
 from functional_api import FunctionAPI
 
 func = FunctionAPI()
 
+# Add the two views we have been talking about  all this time :)
+class HomePageView(TemplateView):
+    template_name = "index.html"
 
-def index(request):
-    print(dir(request))
-    if request.path == '/event/':
-        return HttpResponse("<h2>Hello.. Welcome to Event Management.</h2>")
-    else:
-        return HttpResponse("<h3>Hello.. Welcome to django projects</h3>")
+
+class AboutPageView(TemplateView):
+    template_name = "about.html"
+
+
+def index(TemplateView):
+    template_name = "index.html"
+    # return render(request, 'index.html')
+    # print(dir(request))
+    # if request.path == '/event/':
+    #     return HttpResponse("<h2>Hello.. Welcome to Event Management.</h2>")
+    # else:
+    #     return HttpResponse("<h3>Hello.. Welcome to django projects</h3>")
 
 
 def all_event_list(request):
