@@ -7,24 +7,23 @@ from functional_api import FunctionAPI
 
 func = FunctionAPI()
 
-# Add the two views we have been talking about  all this time :)
-class HomePageView(TemplateView):
-    template_name = "index.html"
+class SignupPageView(TemplateView):
+    template_name = "signup.html"
 
 
-class AboutPageView(TemplateView):
-    template_name = "about.html"
+class SigninPageView(TemplateView):
+    template_name = "signin.html"
 
 
-def index(TemplateView):
-    template_name = "index.html"
-    # return render(request, 'index.html')
-    # print(dir(request))
-    # if request.path == '/event/':
-    #     return HttpResponse("<h2>Hello.. Welcome to Event Management.</h2>")
-    # else:
-    #     return HttpResponse("<h3>Hello.. Welcome to django projects</h3>")
-
+def register_user(request):
+    if request.method == "POST":
+        if 'username' in request.session:
+            html = func.generateAllEventList()
+            return HttpResponse(html)
+        else:
+            return request
+    elif request.method == "GET":
+        return HttpResponse(request.method)
 
 def all_event_list(request):
     return func.generateAllEventList()
@@ -50,7 +49,8 @@ def event(request):
     elif request.method == "POST":
         data = ast.literal_eval(request.body)
         print data
-        if func.addEvent(data):
-            return HttpResponse("Success", 202)
-        else:
-            return HttpResponse("Fail", 400)
+        return HttpResponse("TRUE")
+        # if func.addEvent(data):
+        #     return HttpResponse("Success", 202)
+        # else:
+        #     return HttpResponse("Fail", 400)

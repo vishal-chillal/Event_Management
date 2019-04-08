@@ -1,13 +1,12 @@
 from django.conf.urls import url
 from . import views
 
-# urlpatterns = [
-#     url(r'^$', views.index, name='index'),
-#     url(r'db', views.dashboard, name='dashboard'),
-#     url(r'events', views.event, name='events')
-# ]
-
 urlpatterns = [
-    url(r'^$', views.HomePageView.as_view(), name='home'), # Notice the URL has been named
-    url(r'^about/$', views.AboutPageView.as_view(), name='about'),
+    url(r'^$', views.SignupPageView.as_view(), name='register'),
+    url(r'^signup', views.SignupPageView.as_view(), name='register'),
+    url(r'^signin', views.SigninPageView.as_view(), name='login'),
+    url(r'^homepage', views.register_user, name='homepage'),
+    
+    url(r'db', views.dashboard, name='dashboard'),
+    url(r'events', views.event, name='events')
 ]
