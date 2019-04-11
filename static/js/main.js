@@ -1,25 +1,16 @@
 var session_id;
 var pageName;
 
-var handle_fuctions = {
-    "login.html": handle_login,
-    // "reg.html": handle_reg,
-    // "home.html": handle_home_req
-};
-var login_response = {
-    "success": "You are logged in!",
-    "Invalid": "username or password is incorrect!",
-    "timeout": "Server is not respondig!"
-};
 
 
 $(document).ready(function(event) {
     pageName = get_pagename();
-    if (pageName != "signin.html" && pageName != "signup.html") {
+    console.log(pageName);
+    if (!("signin.html".includes(pageName)) && !("signup.html".includes(pageName))) {
 	    session_id = sessionStorage.getItem("session");
 	    if (!session_id) {
-	        alert("please login");
-	        window.location.href = "signin.html";
+	        alert("please login now");
+	        window.location.href = "/event/signin.html";
 	    }
     }
     if (session_id && pageName != "lable.html") {
@@ -36,7 +27,7 @@ function get_pagename() {
 
 
 function handle_login(response, user_name) {
-    show_status(login_response[response]);
+    // show_status(login_response[response]);
     if (response == 'success') {
         sessionStorage.setItem("session", user_name);
         window.location.href = "home.html";
@@ -72,8 +63,10 @@ $(document).ready(function(event) {
         e.preventDefault();
         request_json = create_login_request();
         console.log("Login request sent");
+        console.log(request_json);
+        var user_name = request_json.user_name;
         excecute_service(request_json);
-        // test(request_json);
+
     });
 });
 

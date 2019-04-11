@@ -47,14 +47,60 @@
 //         });
 // }
 
+
+var handle_fuctions = {
+    "login.html": handle_login,
+    // "reg.html": handle_reg,
+    // "home.html": handle_home_req
+};
+
+var login_response = {
+    "success": "You are logged in!",
+    "Invalid": "username or password is incorrect!",
+    "timeout": "Server is not respondig!"
+};
+
+function handle_login(response, user_name) {
+    // show_status(login_response[response]);
+    if (response == 'Success') {
+        console.log("login succ")
+        sessionStorage.setItem("session", user_name);
+        // window.location.href = "home.html";
+    }
+}
+
+
 function excecute_service(request_json){
-    $.ajax({ 
+    $.ajax({
         type: "POST",
-        dataType: "Json",
+        dataType: "application/JSON",
         url: "/event/events",
-        data:request_json,
-        success: function(data){        
-        alert(data);
+        data: JSON.stringify(request_json),
+        complete: function(data){
+            if("signin.html".substring(request_json.pageName)){
+                    handle_login(data.responseText, request_json.user_name);
+            }
         }
     });
+  
 }
+
+// readyState 4 
+// getResponseHeader function .ajax/E.getResponseHeader() 
+// getAllResponseHeaders function .ajax/E.getAllResponseHeaders() 
+// setRequestHeader function .ajax/E.setRequestHeader() 
+// overrideMimeType function .ajax/E.overrideMimeType() 
+// statusCode function .ajax/E.statusCode() 
+// abort function .ajax/E.abort() 
+// state function .Deferred/i.state() 
+// always function .Deferred/i.always() 
+// catch function .Deferred/i.catch() 
+// pipe function .Deferred/i.pipe() 
+// then function .Deferred/i.then() 
+// promise function .Deferred/i.promise() 
+// progress function w.Callbacks/l.add() 
+// done function w.Callbacks/l.add() 
+// fail function w.Callbacks/l.add() 
+// responseText Success 
+// status 200 
+// statusText OK 

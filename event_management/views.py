@@ -49,8 +49,4 @@ def event(request):
     elif request.method == "POST":
         data = ast.literal_eval(request.body)
         print data
-        return HttpResponse("TRUE")
-        # if func.addEvent(data):
-        #     return HttpResponse("Success", 202)
-        # else:
-        #     return HttpResponse("Fail", 400)
+        return HttpResponse("Success")
