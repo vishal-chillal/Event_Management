@@ -49,8 +49,8 @@
 
 
 var handle_fuctions = {
-    "login.html": handle_login,
-    // "reg.html": handle_reg,
+    "signin.html": handle_login,
+    "signup.html": handle_registration,
     // "home.html": handle_home_req
 };
 
@@ -63,10 +63,25 @@ var login_response = {
 function handle_login(response, user_name) {
     // show_status(login_response[response]);
     if (response == 'Success') {
-        console.log("login succ")
         sessionStorage.setItem("session", user_name);
-        // window.location.href = "home.html";
+        // window.location.href = "dashboard.html";
+        window.location.href = "signup.html";
     }
+    else{
+        alert("Login FAILED");
+    }
+}
+
+function handle_registration(response, user_name) {
+    // show_status(login_response[response]);
+    if (response == 'Success') {
+        alert("Login Successful....");
+        window.location.href = "signin.html";
+    }
+    else{
+        alert("registration failed");
+    }
+
 }
 
 
@@ -79,6 +94,9 @@ function excecute_service(request_json){
         complete: function(data){
             if("signin.html".substring(request_json.pageName)){
                     handle_login(data.responseText, request_json.user_name);
+            }
+            else{
+                console.log("zxcc");
             }
         }
     });

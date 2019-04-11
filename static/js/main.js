@@ -26,22 +26,10 @@ function get_pagename() {
 }
 
 
-function handle_login(response, user_name) {
-    // show_status(login_response[response]);
-    if (response == 'success') {
-        sessionStorage.setItem("session", user_name);
-        window.location.href = "home.html";
-    }
-}
-
 function show_status(msg) {
     document.getElementById('status').getElementsByTagName('span')[0].innerHTML = msg;
 }
 
-$("#register").click(function(e) {
-	e.preventDefault();
-	window.location.href = "reg.html";
-});
 
 $("#log_out").click(function(e) {
 	e.preventDefault();
@@ -61,22 +49,30 @@ function handle_response(request_json, response) {
 $(document).ready(function(event) {
     $("#login_btn").click(function(e) {
         e.preventDefault();
-        request_json = create_login_request();
+        pageName = get_pagename();
+        var obj = $('.login-form').serializeArray();
+        request_json = create_request(obj, pageName);
         console.log("Login request sent");
-        console.log(request_json);
         var user_name = request_json.user_name;
         excecute_service(request_json);
-
     });
+   
+    $("#signup").click(function(e) {
+        e.preventDefault();
+        pageName = get_pagename();
+        var obj = $('.register-form').serializeArray();
+        request_json = create_request(obj, pageName);
+        console.log(request_json);
+    }); 
 });
 
 
-function create_login_request() {
-    var obj = $('.login-form').serializeArray();
+function create_request(obj, pageName) {
     var request_json = new Object()
+
     for (entry in obj) {
         request_json[obj[entry]['name']] = obj[entry]['value']
     }
-    request_json['pageName'] = 'signin.html';
+    request_json['pageName'] = pageName;
     return request_json
 }

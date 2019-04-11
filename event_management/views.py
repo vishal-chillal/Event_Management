@@ -17,13 +17,13 @@ class SigninPageView(TemplateView):
 
 def register_user(request):
     if request.method == "POST":
-        if 'username' in request.session:
-            html = func.generateAllEventList()
-            return HttpResponse(html)
+        data = ast.literal_eval(request.body)
+        if 'user_name' in data:
+            # html = func.generateAllEventList()
+            return HttpResponse("Success", status='200')
+            # return HttpResponse(html)
         else:
-            return request
-    elif request.method == "GET":
-        return HttpResponse(request.method)
+            return HttpResponse('Error', status='404')
 
 def all_event_list(request):
     return func.generateAllEventList()
