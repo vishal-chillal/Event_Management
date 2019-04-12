@@ -5,8 +5,7 @@ urlpatterns = [
     url(r'^$', views.SignupPageView.as_view(), name='register'),
     url(r'^signup', views.SignupPageView.as_view(), name='register'),
     url(r'^signin', views.SigninPageView.as_view(), name='login'),
-    url(r'^dashboard', views.register_user, name='dashboard'),
-    
-    # url(r'db', views.dashboard, name='dashboard'),
-    url(r'events', views.event, name='events')
+    url(r'^register_user', views.register, name='register_user'),
+    url(r'^login_user', views.login_user, name='login_user')
+    # url(r'^events', views.register, name='signup_user')
 ]

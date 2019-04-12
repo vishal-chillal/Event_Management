@@ -7,7 +7,7 @@ class FunctionAPI(object):
     """docstring for FunctionAPI"""
 
     def __init__(self):
-        self.user_details = UserInfo.objects.values()
+        self.user_details = UserInfo.objects.all()
         self.event_details = {}
         self.allEventList = {}
         self.counter = 0
@@ -67,18 +67,6 @@ class FunctionAPI(object):
             print(e)
             return False
 
-    # def getMyEvents(self, username):
-    #     query = """SELECT * from krishi_subscription where username = """
-    #     query += "'" + username + "'"
-    #     self.myEventList = {}
-
-    #     event_lst = Subscription.objects.raw(query)
-    #     for eachEvnt in event_lst:
-    #         value = self.allEventList[eachEvnt.eventid]
-    #         self.myEventList[eachEvnt.eventid] = value
-    #     print self.myEventList, " ", username
-    #     return self.myEventList
-
     def generateAllEventList(self):
         html = '<h1>All Events</h1><br><div>'
         allevents = self.getAllEvents()
@@ -89,3 +77,14 @@ class FunctionAPI(object):
             html += str(each[1]) + "</a><br>"
         html += '</div><br>'
         return html
+
+    def get_all_users(self):
+        # return map(lambda x:x.user_name.encode('ascii', 'ignore'), self.user_details)
+        return map(lambda x:x.user_name, self.user_details)
+
+    def add_user_details(self,user_dict):
+        user = UserInfo()
+        user.user_name=user_dict['user_name']
+        user.password=user_dict['password']
+        user.email=user_dict['email']
+        user.save()

@@ -14,39 +14,37 @@ class SignupPageView(TemplateView):
 class SigninPageView(TemplateView):
     template_name = "signin.html"
 
-
-def register_user(request):
+def login_user(request):
     if request.method == "POST":
         data = ast.literal_eval(request.body)
-        if 'user_name' in data:
-            # html = func.generateAllEventList()
-            return HttpResponse("Success", status='200')
-            # return HttpResponse(html)
-        else:
-            return HttpResponse('Error', status='404')
+        print "login_request",data
+        return HttpResponse("Success", status='200')
+    else:
+        return HttpResponse('Error', status='404')
 
-def all_event_list(request):
-    return func.generateAllEventList()
-
-
-def dashboard(request):
-    """This will be the dashboard of event management system"""
-    return HttpResponse(str(func.getAllEvents()))
+def register(request):
+    ''' handle registration of users '''
+    if request.method == "POST":
+        """convert the request to simple dict format"""
+        data = ast.literal_eval(request.body)
 
 
-def event(request):
-    ''' admin panal handle event request '''
-    # if request.method == "GET":
-    #     if 'username' in request.session:
-    #         html = func.generateAllEventList()
-    #         return HttpResponse(html)
-    #     else:
-    #         return HttpResponse("INVALID")
+        """handle empty fields and send error code"""
+        # yet to be handled 
+
+
+        user = data.get('user_name')
+        """get all user list from database and validate presence of user"""
+        user_list = func.get_all_users()
+        print user_list
+        if user_list:
+            if user in user_list :
+                return HttpResponse('Error', status='404')
+
+        """add new entry to the database and send success report"""
+        func.add_user_details(data)
+        return HttpResponse("Success", status='200')
+            
     if request.method == "GET":
         html = func.generateAllEventList()
         return HttpResponse(html)
-
-    elif request.method == "POST":
-        data = ast.literal_eval(request.body)
-        print data
-        return HttpResponse("Success")

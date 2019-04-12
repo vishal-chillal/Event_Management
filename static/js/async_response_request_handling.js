@@ -46,11 +46,14 @@
 //             }
 //         });
 // }
-
+var url_dict = {
+    "signin": "/event/login_user",
+    "signup": "/event/register_user"
+}
 
 var handle_fuctions = {
-    "signin.html": handle_login,
-    "signup.html": handle_registration,
+    "signin": handle_login,
+    "signup": handle_registration,
     // "home.html": handle_home_req
 };
 
@@ -61,25 +64,27 @@ var login_response = {
 };
 
 function handle_login(response, user_name) {
-    // show_status(login_response[response]);
     if (response == 'Success') {
         sessionStorage.setItem("session", user_name);
         // window.location.href = "dashboard.html";
-        window.location.href = "signup.html";
+        // window.location.href = "signup.html";
     }
     else{
         alert("Login FAILED");
+        window.location.href = "signin";
     }
 }
 
 function handle_registration(response, user_name) {
     // show_status(login_response[response]);
     if (response == 'Success') {
-        alert("Login Successful....");
-        window.location.href = "signin.html";
+        alert("registration Successful....");
+        // window.location.href = "signin";
     }
     else{
         alert("registration failed");
+        // window.location.href = "signup";
+
     }
 
 }
@@ -89,15 +94,10 @@ function excecute_service(request_json){
     $.ajax({
         type: "POST",
         dataType: "application/JSON",
-        url: "/event/events",
+        url: url_dict[request_json.pageName],
         data: JSON.stringify(request_json),
         complete: function(data){
-            if("signin.html".substring(request_json.pageName)){
-                    handle_login(data.responseText, request_json.user_name);
-            }
-            else{
-                console.log("zxcc");
-            }
+            handle_fuctions[request_json.pageName](data.responseText, request_json.user_name)
         }
     });
   

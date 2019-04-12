@@ -4,6 +4,7 @@ var pageName;
 
 
 $(document).ready(function(event) {
+    $("#re_password, #password").keyup(checkPasswordMatch);
     pageName = get_pagename();
     console.log(pageName);
     if (!("signin.html".includes(pageName)) && !("signup.html".includes(pageName))) {
@@ -13,11 +14,35 @@ $(document).ready(function(event) {
 	        window.location.href = "/event/signin.html";
 	    }
     }
-    if (session_id && pageName != "lable.html") {
-	get_service_list();
-	document.getElementById('home').getElementsByTagName('span')[0].innerHTML = "welcome " + session_id;
-    }
+    $("#login_btn").click(function(e) {
+        e.preventDefault();
+        var obj = $('.login-form').serializeArray();
+        request_json = create_request(obj, pageName);
+        console.log("Login request sent");
+        excecute_service(request_json);
+    });
+
+    $("#signup_btn").click(function(e) {
+        e.preventDefault();
+        if (document.getElementById('divCheckPasswordMatch').innerHTML != "Passwords do not match!"){
+            var obj = $('.register-form').serializeArray();
+            request_json = create_request(obj, pageName);
+            console.log("register request sent");
+            excecute_service(request_json);
+        }
+    }); 
+
 });
+
+function checkPasswordMatch() {
+    var password = $("#password").val();
+    var confirmPassword = $("#re_password").val();
+
+    if (password != confirmPassword)
+        $("#divCheckPasswordMatch").html("Passwords do not match!");
+    else
+        $("#divCheckPasswordMatch").html("Passwords match.");
+}
 
 function get_pagename() {
     var a = window.location.href,
@@ -47,24 +72,10 @@ function handle_response(request_json, response) {
 }
 
 $(document).ready(function(event) {
-    $("#login_btn").click(function(e) {
-        e.preventDefault();
-        pageName = get_pagename();
-        var obj = $('.login-form').serializeArray();
-        request_json = create_request(obj, pageName);
-        console.log("Login request sent");
-        var user_name = request_json.user_name;
-        excecute_service(request_json);
-    });
-   
-    $("#signup").click(function(e) {
-        e.preventDefault();
-        pageName = get_pagename();
-        var obj = $('.register-form').serializeArray();
-        request_json = create_request(obj, pageName);
-        console.log(request_json);
-    }); 
+    
+       
 });
+
 
 
 function create_request(obj, pageName) {
