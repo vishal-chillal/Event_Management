@@ -1,11 +1,16 @@
 from django.http import HttpResponse
 from django.shortcuts import render
-import ast
+from django.shortcuts import redirect
 from django.views.generic import TemplateView # Import TemplateView
-
 from functional_api import FunctionAPI
+import ast
 
 func = FunctionAPI()
+
+def redirect_view(request):
+    response = redirect('/event/signup')
+    return response
+
 
 class SignupPageView(TemplateView):
     template_name = "signup.html"
@@ -18,33 +23,29 @@ def login_user(request):
     if request.method == "POST":
         data = ast.literal_eval(request.body)
         print "login_request",data
-        return HttpResponse("Success", status='200')
+        user = data.get('user_name')
+        user_details = func.get_user_details(user)
+        if user_details and user_details.password == data.get('password'):
+            return HttpResponse("Success", status='200')
+        else:
+            return HttpResponse('Error', status='403')
     else:
         return HttpResponse('Error', status='404')
 
-def register(request):
+def register_user(request):
     ''' handle registration of users '''
     if request.method == "POST":
         """convert the request to simple dict format"""
         data = ast.literal_eval(request.body)
-
-
-        """handle empty fields and send error code"""
-        # yet to be handled 
-
-
         user = data.get('user_name')
+        if not user:
+            return HttpResponse('Error', status='409')
         """get all user list from database and validate presence of user"""
         user_list = func.get_all_users()
-        print user_list
         if user_list:
             if user in user_list :
-                return HttpResponse('Error', status='404')
+                return HttpResponse('Error', status='409')
 
         """add new entry to the database and send success report"""
         func.add_user_details(data)
-        return HttpResponse("Success", status='200')
-            
-    if request.method == "GET":
-        html = func.generateAllEventList()
-        return HttpResponse(html)
+        return HttpResponse("Success", status='201')

@@ -4,9 +4,9 @@ var pageName;
 
 
 $(document).ready(function(event) {
+
     $("#re_password, #password").keyup(checkPasswordMatch);
     pageName = get_pagename();
-    console.log(pageName);
     if (!("signin.html".includes(pageName)) && !("signup.html".includes(pageName))) {
 	    session_id = sessionStorage.getItem("session");
 	    if (!session_id) {
@@ -23,6 +23,8 @@ $(document).ready(function(event) {
     });
 
     $("#signup_btn").click(function(e) {
+        $("input").prop('required',true);
+
         e.preventDefault();
         if (document.getElementById('divCheckPasswordMatch').innerHTML != "Passwords do not match!"){
             var obj = $('.register-form').serializeArray();
@@ -70,12 +72,6 @@ function handle_response(request_json, response) {
         handle_fuctions[request_json['pageName']](response, request_json['user_name']);
     }
 }
-
-$(document).ready(function(event) {
-    
-       
-});
-
 
 
 function create_request(obj, pageName) {

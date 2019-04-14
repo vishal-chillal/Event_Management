@@ -78,6 +78,12 @@ class FunctionAPI(object):
         html += '</div><br>'
         return html
 
+    def get_user_details(self, user):
+        try:
+            return UserInfo.objects.get(user_name=user)
+        except UserInfo.DoesNotExist:
+            return None
+
     def get_all_users(self):
         # return map(lambda x:x.user_name.encode('ascii', 'ignore'), self.user_details)
         return map(lambda x:x.user_name, self.user_details)

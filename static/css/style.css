@@ -590,3 +590,8 @@ label.valid {
     margin-bottom: 10px; } }
 
 /*# sourceMappingURL=style.css.map */
+
+.form-group.required .control-label:before { 
+  content:"*";
+  color:red;
+}

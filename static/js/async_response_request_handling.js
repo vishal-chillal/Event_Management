@@ -1,51 +1,3 @@
-// var configuration = read_configuration();
-// function read_configuration() {
-//     var data;
-//     $.ajax({
-//         type: "POST",
-//         url: "../config/js_config.JSON",
-//         datatype: "JSON",
-//         async: false
-//     }).done(function(conf) {
-//         data = conf;
-//     });
-//     return data
-// }
-// var mod_python_script = configuration['mod_python'];
-// var make_request_asynch = mod_python_script + "/make_request_asynch";
-// var get_response_asych = mod_python_script + "/get_response_asych";
-// var retry_time_intv = configuration['time_interval'];
-
-// function excecute_service(request_json,asych) {
-//     // request_json['config'] = configuration['mod_python_config'];
-//     $.post(
-//             make_request_asynch,
-//             request_json
-	
-//         )
-//         .done(function(request_id) {
-//             console.log("request_made = ",request_id);
-//             setTimeout(fetch_response, retry_time_intv);
-//             function fetch_response() {
-//                 var request = new Object();
-//                 request['request_id'] = request_id;
-//                 request['config'] = configuration['mod_python_config'];
-//                 $.post(get_response_asych, request).done(function(data) {
-// 		    console.log(data);
-//                     if (data != request_id) {
-//                         console.log("response got = ",data);
-//                         clearTimeout(fetch_response);
-//                         show_status("");
-//                         handle_response(request_json, data)
-//                     } else {
-//                         clearTimeout(fetch_response);
-//                         show_status("Please wait, request in process!");
-//                         setTimeout(fetch_response, retry_time_intv)
-//                     }
-//                 });
-//             }
-//         });
-// }
 var url_dict = {
     "signin": "/event/login_user",
     "signup": "/event/register_user"
@@ -57,34 +9,39 @@ var handle_fuctions = {
     // "home.html": handle_home_req
 };
 
-var login_response = {
-    "success": "You are logged in!",
-    "Invalid": "username or password is incorrect!",
-    "timeout": "Server is not respondig!"
+var response_msg = {
+    200 : "You are logged in!",
+    201 : "registration Successful",
+    403 : "username or password is incorrect!",
+    408 : "Server is not respondig!",
+    409 : "username already exists"
 };
 
-function handle_login(response, user_name) {
+function handle_login(response, status, user_name) {
     if (response == 'Success') {
         sessionStorage.setItem("session", user_name);
+        console.log(response_msg[status]);
+
         // window.location.href = "dashboard.html";
         // window.location.href = "signup.html";
     }
     else{
-        alert("Login FAILED");
-        window.location.href = "signin";
+        console.log(response_msg[status]);
+        console.log("Login FAILED");
+        // window.location.href = "signin";
     }
 }
 
-function handle_registration(response, user_name) {
+function handle_registration(response, status, user_name) {
     // show_status(login_response[response]);
     if (response == 'Success') {
-        alert("registration Successful....");
+        console.log(response_msg[status]);
         // window.location.href = "signin";
     }
-    else{
-        alert("registration failed");
+    else {
+        console.log(response_msg[status]);
+        console.log("registration failed");
         // window.location.href = "signup";
-
     }
 
 }
@@ -97,7 +54,7 @@ function excecute_service(request_json){
         url: url_dict[request_json.pageName],
         data: JSON.stringify(request_json),
         complete: function(data){
-            handle_fuctions[request_json.pageName](data.responseText, request_json.user_name)
+            handle_fuctions[request_json.pageName](data.responseText, data.status, request_json.user_name)
         }
     });
   
