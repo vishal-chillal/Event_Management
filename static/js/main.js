@@ -34,6 +34,13 @@ $(document).ready(function(event) {
         }
     }); 
 
+    $("#log_out_btn").click(function(e) {
+        e.preventDefault();
+        sessionStorage.removeItem("session");
+        window.location.href = "signin";
+    });
+    
+
 });
 
 function checkPasswordMatch() {
@@ -57,12 +64,6 @@ function show_status(msg) {
     document.getElementById('status').getElementsByTagName('span')[0].innerHTML = msg;
 }
 
-
-$("#log_out").click(function(e) {
-	e.preventDefault();
-	sessionStorage.removeItem("session");
-	window.location.href = "login.html";
-});
 
 function handle_response(request_json, response) {
     if (request_json['pageName'] == 'home.html') {

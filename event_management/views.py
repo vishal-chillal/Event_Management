@@ -19,6 +19,11 @@ class SignupPageView(TemplateView):
 class SigninPageView(TemplateView):
     template_name = "signin.html"
 
+class DashboardPageView(TemplateView):
+    template_name = "dashboard.html"
+
+
+
 def login_user(request):
     if request.method == "POST":
         data = ast.literal_eval(request.body)
@@ -49,3 +54,11 @@ def register_user(request):
         """add new entry to the database and send success report"""
         func.add_user_details(data)
         return HttpResponse("Success", status='201')
+
+def dashboard(request):
+    ''' handle registration of users '''
+    if request.method == "POST":
+        return HttpResponse("Success", status='201')
+    else:
+        return HttpResponse("Success", status='201')
+

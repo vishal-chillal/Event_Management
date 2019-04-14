@@ -22,13 +22,12 @@ function handle_login(response, status, user_name) {
         sessionStorage.setItem("session", user_name);
         console.log(response_msg[status]);
 
-        // window.location.href = "dashboard.html";
+        window.location.href = "dashboard.html";
         // window.location.href = "signup.html";
     }
     else{
         console.log(response_msg[status]);
-        console.log("Login FAILED");
-        // window.location.href = "signin";
+        console.log("Login Failed");
     }
 }
 
@@ -41,7 +40,6 @@ function handle_registration(response, status, user_name) {
     else {
         console.log(response_msg[status]);
         console.log("registration failed");
-        // window.location.href = "signup";
     }
 
 }
