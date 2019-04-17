@@ -10,18 +10,20 @@
 <body>
   {% block pagecontent %}
 
-  <div class="main">
-    <!-- Sing in  Form -->
+  <div class="main" ng-controller="SigninController">
+    <!-- Sign in  Form -->
     <section class="sign-in" id="sign-in">
         <div class="container">
             <div class="signin-content">
                 <div class="signin-image">
-                    <figure><img src="{% static 'images/signin-image.jpg' %}" alt="sing up image"></figure>
+                    <figure><img src="{% static 'images/signin-image.jpg' %}" alt="sign up image"></figure>
                     <a href="{% url 'register' %}" class="signup-image-link">Create an account</a>
                 </div>
 
                 <div class="signin-form">
-                    <h2 class="form-title">Sign In</h2>
+                    {% verbatim %}
+                    <h2 class="form-title"> {{ title }} </h2>
+                    {% endverbatim %}
                     <form class="login-form" id="login-form">
                         <div class="form-group">
                             <label for="user_name"><i class="zmdi zmdi-account material-icons-name"></i></label>
