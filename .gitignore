@@ -1,5 +1,6 @@
 # Object files
 *.o
+*.pyc
 *.ko
 *.obj
 *.elf
@@ -30,3 +31,7 @@
 
 # Debug files
 *.dSYM/
+*~
+
+# Folders
+venv
