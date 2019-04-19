@@ -25,7 +25,7 @@ SECRET_KEY = 'l4*nvd($w=&w5v4q@2tpid0a+0p-8f4s^)q*yr&&l)^a+eidc%'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['10.201.1.11']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition

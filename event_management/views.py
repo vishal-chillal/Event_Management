@@ -15,7 +15,6 @@ def redirect_view(request):
 class SignupPageView(TemplateView):
     template_name = "signup.html"
 
-
 class SigninPageView(TemplateView):
     template_name = "signin.html"
 
