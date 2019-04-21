@@ -41,8 +41,9 @@ def register_user(request):
     if request.method == "POST":
         """convert the request to simple dict format"""
         data = ast.literal_eval(request.body)
-        user = data.get('user_name')
-        if not user:
+        try:
+            user = data['user_name']
+        except KeyError:
             return HttpResponse('Error', status='409')
         """get all user list from database and validate presence of user"""
         user_list = func.get_all_users()
@@ -61,3 +62,25 @@ def dashboard(request):
     else:
         return HttpResponse("Success", status='201')
 
+def events(request):
+    ''' handle CURD opetration on events '''
+    if request.method == "POST":
+        data = ast.literal_eval(request.body)
+        request_data = dict()
+        try:
+            request_data['eventname'] = data["event_name"]
+            request_data['location'] = data["location"]
+            request_data['startdate'] = data["date_time"]
+            if data.has_key("capacity"):
+                request_data['capacity'] = data["capacity"]
+            if data.has_key("description"):
+                request_data['description'] = data["description"]
+            if data.has_key("fees"):
+                request_data['fees'] = data["fees"]
+        except KeyError as E:
+            resp_msg = E + " is not given in the request"
+            return HttpResponse(resp_msg, status='400')
+        func.addEvent(request_data)
+        return HttpResponse("Success", status='201')
+    else:
+        return HttpResponse("Success", status='201')

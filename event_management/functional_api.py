@@ -38,15 +38,12 @@ class FunctionAPI(object):
 
     def addEvent(self, req):
         obj = Event()
-        obj.id = int(time.time())
-        obj.capacity = req.get("capacity",None)
-        obj.description = req.get("description",None)
-        obj.eventname = req.get("eventname",None)
-        obj.location = req.get("location",None)
-        obj.fees = req.get("fees",None)
-        obj.startdate = req.get("startdate",None)
-        obj.enddate = req.get("enddate",None)
-        obj.info = req.get("info",None)
+        obj.eventname = req["event_name"]
+        obj.location = req["location"]
+        obj.startdate = req["date_time"]
+        obj.capacity = req["capacity"]
+        obj.description = req["description"]
+        obj.fees = req["fees"]
         try:
             obj.save()
             return True
@@ -85,7 +82,6 @@ class FunctionAPI(object):
             return None
 
     def get_all_users(self):
-        # return map(lambda x:x.user_name.encode('ascii', 'ignore'), self.user_details)
         return map(lambda x:x.user_name, self.user_details)
 
     def add_user_details(self,user_dict):
