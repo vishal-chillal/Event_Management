@@ -14,9 +14,8 @@ class Event(models.Model):
     '''docstring for Event'''
     eventname = models.CharField(max_length=100)
     description = models.CharField(max_length=800)
-    # startdate = models.DateTimeField()
-    # enddate = models.DateTimeField()
+    eventdate = models.DateTimeField()
     location = models.CharField(max_length=100)
     capacity = models.IntegerField()
     fees = models.IntegerField()
-    # info = models.CharField(max_length=100)
+    info = models.CharField(max_length=100)

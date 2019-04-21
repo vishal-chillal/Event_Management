@@ -3,18 +3,25 @@ var pageName;
 
 
 
-$(document).ready(function(event) {
+$(document).ready(function (event) {
 
     $("#re_password, #password").keyup(checkPasswordMatch);
     pageName = get_pagename();
     if (!("signin.html".includes(pageName)) && !("signup.html".includes(pageName))) {
-	    session_id = sessionStorage.getItem("session");
-	    if (!session_id) {
-	        alert("please login now");
-	        window.location.href = "/event/signin.html";
-	    }
+        session_id = sessionStorage.getItem("session");
+        if (!session_id) {
+            window.location.assign("/event/signin.html");
+            sessionStorage.setItem("False_attempt", 1);
+        }
     }
-    $("#login_btn").click(function(e) {
+    if (sessionStorage.getItem("False_attempt")==1) {
+        $("#divCheckLoginSession").html("Unable to find session....Please Login!");
+        sessionStorage.setItem("False_attempt", 0);
+    }else if (sessionStorage.getItem("False_attempt") != 1) {
+        $("#divCheckLoginSession").html("");
+    }
+
+    $("#login_btn").click(function (e) {
         e.preventDefault();
         var obj = $('.login-form').serializeArray();
         request_json = create_request(obj, pageName);
@@ -22,24 +29,24 @@ $(document).ready(function(event) {
         excecute_service(request_json);
     });
 
-    $("#signup_btn").click(function(e) {
-        $("input").prop('required',true);
+    $("#signup_btn").click(function (e) {
+        $("input").prop('required', true);
 
         e.preventDefault();
-        if (document.getElementById('divCheckPasswordMatch').innerHTML != "Passwords do not match!"){
+        if (document.getElementById('divCheckPasswordMatch').innerHTML != "Passwords do not match!") {
             var obj = $('.register-form').serializeArray();
             request_json = create_request(obj, pageName);
             console.log("register request sent");
             excecute_service(request_json);
         }
-    }); 
+    });
 
-    $("#log_out_btn").click(function(e) {
+    $("#log_out_btn").click(function logout(e) {
         e.preventDefault();
         sessionStorage.removeItem("session");
         window.location.href = "signin";
     });
-    
+
 
 });
 
@@ -56,7 +63,11 @@ function checkPasswordMatch() {
 function get_pagename() {
     var a = window.location.href,
         b = a.lastIndexOf("/");
-    return a.substr(b + 1);
+    if (a.lastIndexOf(".") == -1) {
+        return a.substring(b + 1);
+    }
+    c = a.lastIndexOf(".");
+    return a.substring(b + 1, c);
 }
 
 
@@ -68,8 +79,8 @@ function show_status(msg) {
 function handle_response(request_json, response) {
     if (request_json['pageName'] == 'home.html') {
         handle_fuctions[request_json['pageName']](response, request_json);
-    }else if (request_json['pageName'] == 'lable.html'){
-    }else {
+    } else if (request_json['pageName'] == 'lable.html') {
+    } else {
         handle_fuctions[request_json['pageName']](response, request_json['user_name']);
     }
 }

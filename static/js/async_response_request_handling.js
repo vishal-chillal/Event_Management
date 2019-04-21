@@ -10,22 +10,20 @@ var handle_fuctions = {
 };
 
 var response_msg = {
-    200 : "You are logged in!",
-    201 : "registration Successful",
-    403 : "username or password is incorrect!",
-    408 : "Server is not respondig!",
-    409 : "username already exists"
+    200: "You are logged in!",
+    201: "registration Successful",
+    403: "username or password is incorrect!",
+    408: "Server is not respondig!",
+    409: "username already exists"
 };
 
 function handle_login(response, status, user_name) {
     if (response == 'Success') {
         sessionStorage.setItem("session", user_name);
         console.log(response_msg[status]);
-
-        window.location.href = "dashboard.html";
-        // window.location.href = "signup.html";
+        window.location.href = "dashboard";
     }
-    else{
+    else {
         console.log(response_msg[status]);
         console.log("Login Failed");
     }
@@ -35,7 +33,7 @@ function handle_registration(response, status, user_name) {
     // show_status(login_response[response]);
     if (response == 'Success') {
         console.log(response_msg[status]);
-        // window.location.href = "signin";
+        window.location.href = "signin";
     }
     else {
         console.log(response_msg[status]);
@@ -45,17 +43,17 @@ function handle_registration(response, status, user_name) {
 }
 
 
-function excecute_service(request_json){
+function excecute_service(request_json) {
     $.ajax({
         type: "POST",
         dataType: "application/JSON",
         url: url_dict[request_json.pageName],
         data: JSON.stringify(request_json),
-        complete: function(data){
+        complete: function (data) {
             handle_fuctions[request_json.pageName](data.responseText, data.status, request_json.user_name)
         }
     });
-  
+
 }
 
 // readyState 4 
