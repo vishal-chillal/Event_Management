@@ -9,18 +9,16 @@
   <meta charset="UTF-8">
   <title>{% block title %} Register {% endblock %}</title>
 </head>
-<body ng-app="myApp"> 
+<body> 
   {% block pagecontent %}
 
-  <div class="main" ng-controller="SignupController"> 
+  <div class="main"> 
     <!-- Sign up form -->
     <section class="signup" id="signup" >
         <div class="container">
             <div class="signup-content">
                 <div class="signup-form">
-                    {% verbatim %}
-                    <h2 class="form-title"> {{ title }} </h2>
-                    {% endverbatim %}
+                    <h2 class="form-title"> Sign Up </h2>
                     <form method="POST" class="register-form" id="register-form">
                         <div class="form-group">
                             <label for="user_name"><i class="zmdi zmdi-account material-icons-name control-label"></i></label>
