@@ -12006,3 +12006,10 @@ footer.sticky-footer .copyright {
 body.sidebar-toggled footer.sticky-footer {
   width: 100%;
 }
+
+.event {
+  width: 400px;
+  min-height: 100px;
+  max-height: 900px;
+  height: auto;
+}

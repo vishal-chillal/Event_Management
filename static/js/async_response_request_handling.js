@@ -1,13 +1,19 @@
 var url_dict = {
     "signin": "/event/login_user",
-    "signup": "/event/register_user"
+    "signup": "/event/register_user",
+    "dashboard": "/event/add_event"
 }
 
 var handle_fuctions = {
     "signin": handle_login,
     "signup": handle_registration,
-    // "home.html": handle_home_req
+    "dashboard": test
 };
+
+function test(response, status, user_name){
+    alert("here")
+}
+
 
 var response_msg = {
     200: "You are logged in!",

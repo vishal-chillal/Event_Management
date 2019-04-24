@@ -47,8 +47,21 @@ $(document).ready(function (event) {
         window.location.href = "signin";
     });
 
+    $('#create_event_id').click(function (e){
+        e.preventDefault();
+        var obj = $('.event').serializeArray();
+        request_json = create_request(obj, pageName);
+        console.log("Creat Event request sent",request_json);
+        excecute_service(request_json);
+    });
+
 
 });
+
+function set_ddl_value(ddl_value){
+    console.log(ddl_value);
+    $("#event_type_id").html(ddl_value)
+}
 
 function checkPasswordMatch() {
     var password = $("#password").val();
@@ -63,11 +76,17 @@ function checkPasswordMatch() {
 function get_pagename() {
     var a = window.location.href,
         b = a.lastIndexOf("/");
-    if (a.lastIndexOf(".") == -1) {
+    if ((a.lastIndexOf(".") == -1) && (a.indexOf("?") == -1)) {
         return a.substring(b + 1);
     }
-    c = a.lastIndexOf(".");
-    return a.substring(b + 1, c);
+    if (a.lastIndexOf(".") != -1){
+        c = a.lastIndexOf(".");
+        return a.substring(b + 1, c);
+    }
+    if (a.lastIndexOf("?") != -1){
+        c = a.indexOf("?");
+        return a.substring(b + 1, c);
+    }
 }
 
 
