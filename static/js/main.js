@@ -14,12 +14,13 @@ $(document).ready(function (event) {
             sessionStorage.setItem("False_attempt", 1);
         }
     }
-    if (sessionStorage.getItem("False_attempt")==1) {
+    if (sessionStorage.getItem("False_attempt") == 1) {
         $("#divCheckLoginSession").html("Unable to find session....Please Login!");
         sessionStorage.setItem("False_attempt", 0);
-    }else if (sessionStorage.getItem("False_attempt") != 1) {
+    } else if (sessionStorage.getItem("False_attempt") != 1) {
         $("#divCheckLoginSession").html("");
     }
+    $("#user_name").html(sessionStorage.getItem("session").toUpperCase());
 
     $("#login_btn").click(function (e) {
         e.preventDefault();
@@ -47,18 +48,18 @@ $(document).ready(function (event) {
         window.location.href = "signin";
     });
 
-    $('#create_event_id').click(function (e){
+    $('#create_event_id').click(function (e) {
         e.preventDefault();
         var obj = $('.event').serializeArray();
         request_json = create_request(obj, pageName);
-        console.log("Creat Event request sent",request_json);
+        console.log("Creat Event request sent", request_json);
         excecute_service(request_json);
     });
 
 
 });
 
-function set_ddl_value(ddl_value){
+function set_ddl_value(ddl_value) {
     console.log(ddl_value);
     $("#event_type_id").html(ddl_value)
 }
@@ -76,17 +77,9 @@ function checkPasswordMatch() {
 function get_pagename() {
     var a = window.location.href,
         b = a.lastIndexOf("/");
-    if ((a.lastIndexOf(".") == -1) && (a.indexOf("?") == -1)) {
-        return a.substring(b + 1);
-    }
-    if (a.lastIndexOf(".") != -1){
-        c = a.lastIndexOf(".");
-        return a.substring(b + 1, c);
-    }
-    if (a.lastIndexOf("?") != -1){
-        c = a.indexOf("?");
-        return a.substring(b + 1, c);
-    }
+    index = a.substring(b + 1).search(/[^A-Za-z]/);
+    var pageName = a.substring(b + 1, b + index + 1)
+    return pageName;
 }
 
 

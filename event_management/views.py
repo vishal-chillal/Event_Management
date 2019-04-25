@@ -68,9 +68,10 @@ def events(request):
         data = ast.literal_eval(request.body)
         request_data = dict()
         try:
-            request_data['eventname'] = data["event_name"]
+            request_data['event_type'] = data["event_type"]
+            request_data['event_name'] = data["event_name"]
             request_data['location'] = data["location"]
-            request_data['startdate'] = data["date_time"]
+            request_data['date_time'] = data["event_date"]
             if data.has_key("capacity"):
                 request_data['capacity'] = data["capacity"]
             if data.has_key("description"):
@@ -78,9 +79,12 @@ def events(request):
             if data.has_key("fees"):
                 request_data['fees'] = data["fees"]
         except KeyError as E:
-            resp_msg = E + " is not given in the request"
+            resp_msg = E.message + " is not given in the request"
             return HttpResponse(resp_msg, status='400')
-        func.addEvent(request_data)
-        return HttpResponse("Success", status='201')
+        if func.addEvent(request_data):
+            return HttpResponse("Success", status='201')
+        else:
+            return HttpResponse("Error", status='400')
+        
     else:
         return HttpResponse("Success", status='201')

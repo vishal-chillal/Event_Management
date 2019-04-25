@@ -38,11 +38,12 @@ class FunctionAPI(object):
 
     def addEvent(self, req):
         obj = Event()
-        obj.eventname = req["event_name"]
-        obj.location = req["location"]
-        obj.startdate = req["date_time"]
-        obj.capacity = req["capacity"]
+        obj.event_type = req["event_type"]
+        obj.event_name = req["event_name"]
         obj.description = req["description"]
+        obj.date_time = req["date_time"]
+        obj.location = req["location"]
+        obj.capacity = req["capacity"]
         obj.fees = req["fees"]
         try:
             obj.save()

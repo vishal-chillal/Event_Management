@@ -11,7 +11,8 @@ var handle_fuctions = {
 };
 
 function test(response, status, user_name){
-    alert("here")
+    // alert("here")
+    console.log(response, status);
 }
 
 

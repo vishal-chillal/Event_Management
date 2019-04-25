@@ -13,7 +13,10 @@ class UserInfo(models.Model):
 
 class Event(models.Model):
     '''docstring for Event'''
+    class Meta:
+        unique_together = (('event_type','location','date_time'),)
     id = models.AutoField(primary_key=True)
+    event_type = models.CharField(max_length=100)
     event_name = models.CharField(max_length=100)
     description = models.CharField(max_length=800)
     date_time = models.DateTimeField(default=datetime.now, blank=True)
