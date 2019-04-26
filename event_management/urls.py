@@ -10,5 +10,5 @@ urlpatterns = [
 
     url(r'register_user', views.register_user, name='register_user'),
     url(r'login_user', views.login_user, name='login_user'),
-    url(r'^add_event*', views.events, name="add_event" )
+    url(r'^add_event', views.events, name="add_event" )
 ]

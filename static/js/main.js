@@ -13,6 +13,12 @@ $(document).ready(function (event) {
             window.location.assign("/event/signin.html");
             sessionStorage.setItem("False_attempt", 1);
         }
+        var user_name = sessionStorage.getItem("session");
+        $("#user_name").html(user_name.toUpperCase());
+        var request_json = new Object()
+        request_json["pageName"] = pageName
+        request_json["user_name"] = user_name
+        excecute_service(request_json, method = "GET");
     }
     if (sessionStorage.getItem("False_attempt") == 1) {
         $("#divCheckLoginSession").html("Unable to find session....Please Login!");
@@ -20,7 +26,6 @@ $(document).ready(function (event) {
     } else if (sessionStorage.getItem("False_attempt") != 1) {
         $("#divCheckLoginSession").html("");
     }
-    $("#user_name").html(sessionStorage.getItem("session").toUpperCase());
 
     $("#login_btn").click(function (e) {
         e.preventDefault();
@@ -75,10 +80,14 @@ function checkPasswordMatch() {
 }
 
 function get_pagename() {
-    var a = window.location.href,
-        b = a.lastIndexOf("/");
+    var a = window.location.href, b = a.lastIndexOf("/");
     index = a.substring(b + 1).search(/[^A-Za-z]/);
-    var pageName = a.substring(b + 1, b + index + 1)
+    if (index == -1) {
+        pageName = a.substring(b + 1);
+    }
+    else {
+        pageName = a.substring(b + 1, b + index + 1);
+    }
     return pageName;
 }
 

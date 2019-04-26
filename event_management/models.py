@@ -11,10 +11,11 @@ class UserInfo(models.Model):
     events_created = models.TextField(null=True)
     events_interested = models.TextField(null=True)
 
+
 class Event(models.Model):
     '''docstring for Event'''
     class Meta:
-        unique_together = (('event_type','location','date_time'),)
+        unique_together = (('event_type', 'location', 'date_time'),)
     id = models.AutoField(primary_key=True)
     event_type = models.CharField(max_length=100)
     event_name = models.CharField(max_length=100)

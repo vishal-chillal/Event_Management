@@ -8,9 +8,9 @@ class FunctionAPI(object):
 
     def __init__(self):
         self.user_details = UserInfo.objects.all()
-        self.event_details = {}
-        self.allEventList = {}
+        self.event_details = dict()
         self.counter = 0
+        self.allEventList = list()
 
     def cleanJson(self, request):
         ''' get the request body and convert it into clean json '''
@@ -21,11 +21,20 @@ class FunctionAPI(object):
         return dic
 
     def getAllEvents(self):
-        ''' get  all events avalable to subscribe '''
+        ''' get all events avalable to subscribe '''
         self.counter += 1
-        self.event_details = Event.objects.values()
+        self.event_details = Event.objects.all()
+        self.allEventList = list()
+
         for eachevent in self.event_details:
-            self.allEventList[eachevent["id"]] = eachevent["eventname"]
+            self.allEventList.append({
+                "id": eachevent.id,
+                "event_name": eachevent.event_name,
+                "location": eachevent.location,
+                "capacity": eachevent.capacity,
+                "date_time": eachevent.date_time.strftime("%Y-%m-%d %H:%M:%S"),
+                "event_type": eachevent.event_type
+            })
         return self.allEventList
 
     def getEvent(self, id):
@@ -48,9 +57,8 @@ class FunctionAPI(object):
         try:
             obj.save()
             return True
-        except Exception as e:
-            print(e)
-            return False
+        except Exception:
+            raise
 
     def getEventCapacity(self, eventid):
         return Event.objects.filter(id=eventid).values()[0]["capacity"]
@@ -65,17 +73,6 @@ class FunctionAPI(object):
             print(e)
             return False
 
-    def generateAllEventList(self):
-        html = '<h1>All Events</h1><br><div>'
-        allevents = self.getAllEvents()
-        for each in allevents.items():
-            html += "<a href="
-            url_name = str(each[0])
-            html += url_name + ">"
-            html += str(each[1]) + "</a><br>"
-        html += '</div><br>'
-        return html
-
     def get_user_details(self, user):
         try:
             return UserInfo.objects.get(user_name=user)
@@ -83,11 +80,11 @@ class FunctionAPI(object):
             return None
 
     def get_all_users(self):
-        return map(lambda x:x.user_name, self.user_details)
+        return map(lambda x: x.user_name, self.user_details)
 
-    def add_user_details(self,user_dict):
+    def add_user_details(self, user_dict):
         user = UserInfo()
-        user.user_name=user_dict['user_name']
-        user.password=user_dict['password']
-        user.email=user_dict['email']
+        user.user_name = user_dict['user_name']
+        user.password = user_dict['password']
+        user.email = user_dict['email']
         user.save()

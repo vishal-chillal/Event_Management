@@ -7,12 +7,44 @@ var url_dict = {
 var handle_fuctions = {
     "signin": handle_login,
     "signup": handle_registration,
-    "dashboard": test
+    "dashboard": handle_dashboard
 };
+function render_all_events(all_event_list) {
+    var array = all_event_list;
+    var entries = ["id", "event_name", "location", "date_time", "capacity"]
+    var str = "<thead><tr>"
+    for (var i = 0; i < entries.length; i++) {
+        str += "<th>" + entries[i] + "</th>"
+    }
+    str += "</tr></thead>"
 
-function test(response, status, user_name){
-    // alert("here")
-    console.log(response, status);
+    for (let index = 0; index < array.length; index++) {
+        const element = array[index];
+        str += "<tr>"
+        for (var i = 0; i < entries.length; i++) {
+            str += "<td>" + element[entries[i]] + "</td>"
+        }
+        str += "</tr>"
+    }
+    $("#event_table_id").html(str);
+}
+
+function handle_dashboard(response, status, user_name) {
+    // console.log(response, status);
+    // handle server is not responding
+    if (status == 200){
+    response = JSON.parse(response)
+    var all_event_list = response.all_events
+    render_all_events(all_event_list);
+}
+else if (status == 200){
+    location.reload()
+    console.log("Event created")
+}
+else{
+    console.log(response)
+}
+
 }
 
 
@@ -49,10 +81,9 @@ function handle_registration(response, status, user_name) {
 
 }
 
-
-function excecute_service(request_json) {
+function excecute_service(request_json, method = "POST") {
     $.ajax({
-        type: "POST",
+        type: method,
         dataType: "application/JSON",
         url: url_dict[request_json.pageName],
         data: JSON.stringify(request_json),
