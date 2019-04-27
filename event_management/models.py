@@ -8,8 +8,6 @@ class UserInfo(models.Model):
     user_name = models.CharField(max_length=100)
     password = models.CharField(max_length=100)
     email = models.CharField(max_length=100)
-    events_created = models.TextField(null=True)
-    events_interested = models.TextField(null=True)
 
 
 class Event(models.Model):
@@ -17,10 +15,17 @@ class Event(models.Model):
     class Meta:
         unique_together = (('event_type', 'location', 'date_time'),)
     id = models.AutoField(primary_key=True)
-    event_type = models.CharField(max_length=100)
-    event_name = models.CharField(max_length=100)
+    event_type = models.CharField(max_length=100, null=False)
+    event_name = models.CharField(max_length=100, null=False)
     description = models.CharField(max_length=800)
-    date_time = models.DateTimeField(default=datetime.now, blank=True)
-    location = models.CharField(max_length=100)
+    date_time = models.DateTimeField(default=datetime.now, null=False)
+    location = models.CharField(max_length=100, null=False)
     capacity = models.IntegerField(default=10)
     fees = models.IntegerField(default=0)
+
+
+class CreatedEvents(models.Model):
+    '''class to identofy events created by users'''
+    user_name = models.ForeignKey(UserInfo, on_delete=models.CASCADE)
+    event_id = models.ForeignKey(Event, on_delete=models.CASCADE,
+                           unique=True)

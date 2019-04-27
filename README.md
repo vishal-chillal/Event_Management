@@ -17,3 +17,10 @@ steps to start the server:
 
 
 Only Login and Register user part is working now, this project is still in development
+
+
+#TODO:
+1. Make primary key in user table, and handle regestration in try exception
+2. Add delete event functionality
+3. Add interested and not-interested buttons/functionality
+4. Add show only my events(created and interested)

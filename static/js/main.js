@@ -56,8 +56,8 @@ $(document).ready(function (event) {
     $('#create_event_id').click(function (e) {
         e.preventDefault();
         var obj = $('.event').serializeArray();
-        request_json = create_request(obj, pageName);
-        console.log("Creat Event request sent", request_json);
+        request_json = create_request(obj, pageName, user_name);
+        console.log("Creat Event request sent", request_json, user_name);
         excecute_service(request_json);
     });
 
@@ -67,6 +67,8 @@ $(document).ready(function (event) {
 function set_ddl_value(ddl_value) {
     console.log(ddl_value);
     $("#event_type_id").html(ddl_value)
+    $("#event_type").html(ddl_value)
+
 }
 
 function checkPasswordMatch() {
@@ -107,12 +109,15 @@ function handle_response(request_json, response) {
 }
 
 
-function create_request(obj, pageName) {
+function create_request(obj, pageName, user_name="") {
     var request_json = new Object()
 
     for (entry in obj) {
         request_json[obj[entry]['name']] = obj[entry]['value']
     }
     request_json['pageName'] = pageName;
-    return request_json
+    if (user_name){
+        request_json["user_name"] = user_name;
+    }
+    return request_json;
 }

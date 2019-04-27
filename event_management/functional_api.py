@@ -1,5 +1,5 @@
 #!/bin/puthon
-from event_management.models import UserInfo, Event
+from event_management.models import UserInfo, Event, CreatedEvents
 import time
 
 
@@ -12,16 +12,8 @@ class FunctionAPI(object):
         self.counter = 0
         self.allEventList = list()
 
-    def cleanJson(self, request):
-        ''' get the request body and convert it into clean json '''
-        ls = request.split('&')
-        dic = {}
-        for x in ls:
-            dic[x.split('=')[0]] = x.split('=')[1]
-        return dic
-
     def getAllEvents(self):
-        ''' get all events avalable to subscribe '''
+        ''' get all events avalable to show on dashboard '''
         self.counter += 1
         self.event_details = Event.objects.all()
         self.allEventList = list()
@@ -37,15 +29,10 @@ class FunctionAPI(object):
             })
         return self.allEventList
 
-    def getEvent(self, id):
-        res = {}
-        for eachevent in self.event_details:
-            if str(eachevent["id"]) == str(id):
-                res = eachevent
-                break
-        return res
-
     def addEvent(self, req):
+        ''' create event
+            raise exception if unable to create event
+        '''
         obj = Event()
         obj.event_type = req["event_type"]
         obj.event_name = req["event_name"]
@@ -56,9 +43,44 @@ class FunctionAPI(object):
         obj.fees = req["fees"]
         try:
             obj.save()
-            return True
+            print "aaaaaaaaaaaaaaaaaaaaaaaaaa", obj.id
+            return obj.id
         except Exception:
             raise
+
+    def add_created_event_entry(self,user_name, event_id):
+        user_details = self.get_user_details(user_name)
+        event_details = self.get_event_details(event_id)
+        obj = CreatedEvents()
+        obj.user_name = user_details
+        obj.id = event_details
+        obj.save()
+
+    def get_event_details(self, event_id):
+        try:
+            return Event.objects.get(id=event_id)
+        except Event.DoesNotExist:
+            return None
+    # def modify_user_event_list(self, user_name, event_id):
+    #     user_details = self.get_user_details(user_name)
+    #     try:
+    #         interested_event_list = user_details.events_interested.split(",")
+    #     except Exception:
+    #         interested_event_list = []
+    #     try:
+    #         created_event_list = user_details.events_created.split(",")
+    #     except Exception:
+    #         created_event_list = []
+    #     interested_event_list.append(str(event_id))
+    #     created_event_list.append(str(event_id))
+    #     try:
+    #         print user_details.events_created
+
+    #         user_details.events_created = ",".join(created_event_list)
+    #         user_details.interested_created = ",".join(interested_event_list)
+    #         user_details.save()
+    #     except Exception as e:
+    #         print "ERROR",e
 
     def getEventCapacity(self, eventid):
         return Event.objects.filter(id=eventid).values()[0]["capacity"]

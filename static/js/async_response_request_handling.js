@@ -13,6 +13,13 @@ function render_all_events(all_event_list) {
     var array = all_event_list;
     var entries = ["id", "event_name", "location", "date_time", "capacity"]
     var str = "<thead><tr>"
+    var colour_dict = {
+        "Out door Sports": "primary",
+        "Indoor Sports": "success",
+        "Movie": "info",
+        "Conference": "secondary",
+        "Dinner": "danger"
+    }
     for (var i = 0; i < entries.length; i++) {
         str += "<th>" + entries[i] + "</th>"
     }
@@ -22,7 +29,12 @@ function render_all_events(all_event_list) {
         const element = array[index];
         str += "<tr>"
         for (var i = 0; i < entries.length; i++) {
-            str += "<td>" + element[entries[i]] + "</td>"
+            str += "<td>"
+            if (i == 1) {
+                str += '"<i class="fas fa-circle text-' + colour_dict[element.event_type] + '"></i>"'
+                console.log(element);
+            }
+            str +=  element[entries[i]] + "</td>"
         }
         str += "</tr>"
     }
@@ -32,18 +44,18 @@ function render_all_events(all_event_list) {
 function handle_dashboard(response, status, user_name) {
     // console.log(response, status);
     // handle server is not responding
-    if (status == 200){
-    response = JSON.parse(response)
-    var all_event_list = response.all_events
-    render_all_events(all_event_list);
-}
-else if (status == 200){
-    location.reload()
-    console.log("Event created")
-}
-else{
-    console.log(response)
-}
+    if (status == 200) {
+        response = JSON.parse(response)
+        var all_event_list = response.all_events
+        render_all_events(all_event_list);
+    }
+    else if (status == 200) {
+        location.reload()
+        console.log("Event created")
+    }
+    else {
+        console.log(response)
+    }
 
 }
 

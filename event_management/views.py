@@ -87,7 +87,11 @@ def events(request):
             resp_msg = E.message + " is not given in the request"
             return HttpResponse(resp_msg, status='400')
         try:
-            if func.addEvent(request_data):
+            event_id = func.addEvent(request_data)
+            # event_id = 1
+            if event_id:
+                func.add_created_event_entry(user_name=data['user_name'],
+                                             event_id=event_id)
                 return HttpResponse("Success", status='201')
             else:
                 raise Exception("Error")
