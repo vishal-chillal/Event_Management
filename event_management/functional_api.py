@@ -1,5 +1,5 @@
 #!/bin/puthon
-from event_management.models import UserInfo, Event, CreatedEvents
+from event_management.models import UserInfo, EventDetails, CreatedEvents
 import time
 
 
@@ -15,7 +15,7 @@ class FunctionAPI(object):
     def getAllEvents(self):
         ''' get all events avalable to show on dashboard '''
         self.counter += 1
-        self.event_details = Event.objects.all()
+        self.event_details = EventDetails.objects.all()
         self.allEventList = list()
 
         for eachevent in self.event_details:
@@ -27,13 +27,22 @@ class FunctionAPI(object):
                 "date_time": eachevent.date_time.strftime("%Y-%m-%d %H:%M:%S"),
                 "event_type": eachevent.event_type
             })
+            # eachevent.delete()
         return self.allEventList
+
+    def get_user_created_events(self, user_name):
+        try:
+            return CreatedEvents.objects.get(user_name=user_name)
+        except UserInfo.DoesNotExist:
+            return None
+
 
     def addEvent(self, req):
         ''' create event
             raise exception if unable to create event
         '''
-        obj = Event()
+        obj = EventDetails()
+        obj.clean()
         obj.event_type = req["event_type"]
         obj.event_name = req["event_name"]
         obj.description = req["description"]
@@ -43,23 +52,32 @@ class FunctionAPI(object):
         obj.fees = req["fees"]
         try:
             obj.save()
-            print "aaaaaaaaaaaaaaaaaaaaaaaaaa", obj.id
+            print "event_id", obj.id
             return obj.id
-        except Exception:
+        except Exception as e:
+            print e
             raise
 
-    def add_created_event_entry(self,user_name, event_id):
+    def add_created_event_entry(self, user_name, event_id):
         user_details = self.get_user_details(user_name)
         event_details = self.get_event_details(event_id)
-        obj = CreatedEvents()
-        obj.user_name = user_details
-        obj.id = event_details
-        obj.save()
+        try:
+            print "aaa", event_details.date_time, user_details
+        except Exception as e:
+            print e,"eeee"
+            raise
+        try:
+            obj = CreatedEvents()
+            obj.user_name = user_details
+            obj.id = event_details
+            obj.save()
+        except Exception as e:
+            print e,"rr"
 
     def get_event_details(self, event_id):
         try:
-            return Event.objects.get(id=event_id)
-        except Event.DoesNotExist:
+            return EventDetails.objects.get(id=event_id)
+        except EventDetails.DoesNotExist:
             return None
     # def modify_user_event_list(self, user_name, event_id):
     #     user_details = self.get_user_details(user_name)
@@ -83,13 +101,13 @@ class FunctionAPI(object):
     #         print "ERROR",e
 
     def getEventCapacity(self, eventid):
-        return Event.objects.filter(id=eventid).values()[0]["capacity"]
+        return EventDetails.objects.filter(id=eventid).values()[0]["capacity"]
 
     def updateEventCapacity(self, decision, eventid):
         try:
             currentCapacity = self.getEventCapacity(eventid)
             currentCapacity += decision
-            Event.objects.filter(id=eventid).update(capacity=currentCapacity)
+            EventDetails.objects.filter(id=eventid).update(capacity=currentCapacity)
             return True
         except Exception as e:
             print(e)

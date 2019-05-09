@@ -31,7 +31,6 @@ $(document).ready(function (event) {
         e.preventDefault();
         var obj = $('.login-form').serializeArray();
         request_json = create_request(obj, pageName);
-        console.log("Login request sent");
         excecute_service(request_json);
     });
 
@@ -42,7 +41,6 @@ $(document).ready(function (event) {
         if (document.getElementById('divCheckPasswordMatch').innerHTML != "Passwords do not match!") {
             var obj = $('.register-form').serializeArray();
             request_json = create_request(obj, pageName);
-            console.log("register request sent");
             excecute_service(request_json);
         }
     });
@@ -57,18 +55,20 @@ $(document).ready(function (event) {
         e.preventDefault();
         var obj = $('.event').serializeArray();
         request_json = create_request(obj, pageName, user_name);
+        request_json.event_type = document.getElementById("event_type").value
         console.log("Creat Event request sent", request_json, user_name);
         excecute_service(request_json);
     });
 
-
 });
+
+
+
 
 function set_ddl_value(ddl_value) {
     console.log(ddl_value);
-    $("#event_type_id").html(ddl_value)
-    $("#event_type").html(ddl_value)
-
+    $("#event_type_id").html(ddl_value);
+    $("#event_type").val(ddl_value);
 }
 
 function checkPasswordMatch() {
@@ -94,11 +94,6 @@ function get_pagename() {
 }
 
 
-function show_status(msg) {
-    document.getElementById('status').getElementsByTagName('span')[0].innerHTML = msg;
-}
-
-
 function handle_response(request_json, response) {
     if (request_json['pageName'] == 'home.html') {
         handle_fuctions[request_json['pageName']](response, request_json);
@@ -109,14 +104,22 @@ function handle_response(request_json, response) {
 }
 
 
-function create_request(obj, pageName, user_name="") {
+function create_request(obj, pageName, user_name = "") {
     var request_json = new Object()
 
     for (entry in obj) {
+        // if (document.getElementById(obj[entry]['name']).required && obj[entry]['value'] == "") {
+
+        //     input = document.getElementById(obj[entry]['name'])
+        //     input.focus();
+        //     $('#' + obj[entry]['name']).css("border-bottom", "1px solid red")
+        //     return -1;
+        // }
         request_json[obj[entry]['name']] = obj[entry]['value']
+
     }
     request_json['pageName'] = pageName;
-    if (user_name){
+    if (user_name) {
         request_json["user_name"] = user_name;
     }
     return request_json;

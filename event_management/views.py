@@ -5,7 +5,8 @@ from django.views.generic import TemplateView  # Import TemplateView
 from functional_api import FunctionAPI
 import ast
 import json
-
+import datetime
+import pytz
 func = FunctionAPI()
 
 
@@ -28,6 +29,7 @@ class DashboardPageView(TemplateView):
 
 def login_user(request):
     if request.method == "POST":
+        print(request.body)
         data = ast.literal_eval(request.body)
         user = data.get('user_name')
         user_details = func.get_user_details(user)
@@ -77,6 +79,15 @@ def events(request):
             request_data['event_name'] = data["event_name"]
             request_data['location'] = data["location"]
             request_data['date_time'] = data["event_date"]
+            event_time = data["time"]
+            event_date = request_data['date_time'] + " " + event_time
+            
+            date_format = '%Y-%m-%d %I:%M'
+
+            unaware_start_date = datetime.datetime.strptime(event_date, date_format)
+            request_data['date_time'] = pytz.utc.localize(unaware_start_date)
+
+            print request_data['date_time'], event_time
             if data.has_key("capacity"):
                 request_data['capacity'] = data["capacity"]
             if data.has_key("description"):
@@ -88,7 +99,6 @@ def events(request):
             return HttpResponse(resp_msg, status='400')
         try:
             event_id = func.addEvent(request_data)
-            # event_id = 1
             if event_id:
                 func.add_created_event_entry(user_name=data['user_name'],
                                              event_id=event_id)
@@ -100,6 +110,10 @@ def events(request):
 
     elif request.method.upper() == "GET":
         all_events = func.getAllEvents()
+        print(dir(request))
+        print(request.GET,"aa")
+        # print(dir(request.get(url = URL, params = PARAMS)))
+        # user_created_events = func.get_user_created_events()
         response = dict()
         response["all_events"] = all_events
         return HttpResponse(json.dumps(response), status='200')

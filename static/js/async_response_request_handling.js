@@ -11,7 +11,7 @@ var handle_fuctions = {
 };
 function render_all_events(all_event_list) {
     var array = all_event_list;
-    var entries = ["id", "event_name", "location", "date_time", "capacity"]
+    var entries = ["event_name", "location", "capacity", "date_time"]
     var str = "<thead><tr>"
     var colour_dict = {
         "Out door Sports": "primary",
@@ -30,11 +30,10 @@ function render_all_events(all_event_list) {
         str += "<tr>"
         for (var i = 0; i < entries.length; i++) {
             str += "<td>"
-            if (i == 1) {
-                str += '"<i class="fas fa-circle text-' + colour_dict[element.event_type] + '"></i>"'
-                console.log(element);
+            if (i == entries.indexOf("event_name")) {
+                str += '<span class="mr-2"> <i class="fas fa-circle text-' + colour_dict[element.event_type] + '"></i></span> '
             }
-            str +=  element[entries[i]] + "</td>"
+            str += element[entries[i]] + "</td>"
         }
         str += "</tr>"
     }
@@ -75,8 +74,8 @@ function handle_login(response, status, user_name) {
         window.location.href = "dashboard";
     }
     else {
-        console.log(response_msg[status]);
-        console.log("Login Failed");
+        var msg = response_msg[status] + "<h3> Login Failed</h3>"
+        $("#errorMsg").html(msg);
     }
 }
 
@@ -87,41 +86,30 @@ function handle_registration(response, status, user_name) {
         window.location.href = "signin";
     }
     else {
-        console.log(response_msg[status]);
-        console.log("registration failed");
+        var msg = response_msg[status] + "<h3>Registration Failed</h3>"
+        $("#errorMsg").html(msg);
     }
 
 }
 
 function excecute_service(request_json, method = "POST") {
+    if (request_json == -1) {
+
+        var msg = "<h4> Please fill the required fields </h4>"
+        $("#errorMsg").html(msg);
+        document.getElementById("errorMsg").style.color = "red";
+        return;
+    }
+    console.log(request_json, typeof (request_json));
     $.ajax({
         type: method,
         dataType: "application/JSON",
         url: url_dict[request_json.pageName],
         data: JSON.stringify(request_json),
+        // data: request_json,
         complete: function (data) {
             handle_fuctions[request_json.pageName](data.responseText, data.status, request_json.user_name)
         }
     });
 
 }
-
-// readyState 4 
-// getResponseHeader function .ajax/E.getResponseHeader() 
-// getAllResponseHeaders function .ajax/E.getAllResponseHeaders() 
-// setRequestHeader function .ajax/E.setRequestHeader() 
-// overrideMimeType function .ajax/E.overrideMimeType() 
-// statusCode function .ajax/E.statusCode() 
-// abort function .ajax/E.abort() 
-// state function .Deferred/i.state() 
-// always function .Deferred/i.always() 
-// catch function .Deferred/i.catch() 
-// pipe function .Deferred/i.pipe() 
-// then function .Deferred/i.then() 
-// promise function .Deferred/i.promise() 
-// progress function w.Callbacks/l.add() 
-// done function w.Callbacks/l.add() 
-// fail function w.Callbacks/l.add() 
-// responseText Success 
-// status 200 
-// statusText OK 

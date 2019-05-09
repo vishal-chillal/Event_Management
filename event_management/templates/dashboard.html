@@ -26,20 +26,25 @@
                     <!-- Card Header - Dropdown -->
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                         <h6 class="m-0 font-weight-bold text-primary"> Create Event</h6>
+                        <span>
+                            <div class="error_class" id="errorMsg">
+                            </div>
+                        </span>
                     </div>
                     <!-- Card Body -->
                     <div class="card-body">
                         <div class="chart-area col-xl-4 col-lg-5" style="height:auto">
                             <form class="event">
                                 <div class="form-group dropdown no-arrow align-items-center">
-                                    <label>Select Event Type</label>
+                                    <label> <span style="color:red">*</span> Select Event Type</label>
 
                                     <a class="btn border-bottom-success shadow btn-lg dropdown-toggle form-control"
                                         type="button" id="event_type_id" data-toggle="dropdown" aria-haspopup="true"
                                         aria-expanded="false">
                                         ---------
                                     </a>
-                                    <input name="event_type" id="event_type" style="visibility:hidden">
+                                    <input type="text" name="event_type" class="form-control form-control-user"
+                                        id="event_type" style="visibility:hidden">
                                     <div class="dropdown-menu animated--fade-in" aria-labelledby="event_type_id">
                                         <a class="dropdown-item btn border-bottom-success shadow btn-lg dropdown-toggle form-control"
                                             type="button" href="#" onclick="set_ddl_value('Out Door Sports')">Out Door
@@ -56,38 +61,38 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label>Enter Event Name</label>
+                                    <label> <span style="color:red">*</span> Enter Event Name</label>
                                     <input type="text" name="event_name" class="form-control form-control-user"
-                                        id="event_name_id" placeholder="Name">
+                                        id="event_name" placeholder="Name" required>
                                 </div>
 
                                 <div class="form-group">
                                     <label>Small Description about event</label>
-                                    <textarea class="form-control form-control-user" name="description" rows="3"
-                                        id="event_desc_id" placeholder="description"></textarea>
+                                    <textarea class="form-control form-control-user" id="description" name="description"
+                                        rows="3" id="event_desc" placeholder="description"></textarea>
                                 </div>
                                 <div class="form-group">
                                     <label>Enter Event Fees</label>
-                                    <input type="number" name="fees" min="0" value="0" class="form-control">
+                                    <input type="number" name="fees" id="fees" min="0" value="0" class="form-control">
                                 </div>
                                 <div class="form-group">
                                     <label>Enter Max Member Capacity </label>
-                                    <input type="number" name="capacity" class="form-control" value="2">
+                                    <input type="number" name="capacity" id="capacity" class="form-control" value="2">
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Select Event Date</label>
-                                    <input type="date" name="event_date" max="3000-12-31" min="1000-01-01"
-                                        class="form-control">
+                                    <label><span style="color:red">*</span> Select Event Date</label>
+                                    <input type="date" name="event_date" id="event_date" max="3000-12-31"
+                                        min="1000-01-01" class="form-control" required>
                                 </div>
                                 <div class="form-group">
-                                    <label>Enter Event Place</label>
-                                    <input type="text" placeholder="venue" name="location"
-                                        class="form-control form-control-user" id="event_place_id">
+                                    <label><span style="color:red">*</span> Enter Event Place</label>
+                                    <input type="text" placeholder="venue" id="location" name="location"
+                                        class="form-control form-control-user" id="event_place_id" required>
                                 </div>
                                 <div class="form-group">
-                                    <label>Enter Event Timing</label>
-                                    <input type="time" name="time" class="form-control" id="event_timing_id">
+                                    <label><span style="color:red">*</span> Enter Event Timing</label>
+                                    <input type="time" name="time" class="form-control" id="time" required>
                                 </div>
                                 <div class="form-group">
                                     <input type="submit" class="form-control btn btn-danger btn-lg"
@@ -109,15 +114,6 @@
                     <!-- Card Body -->
                     <div class="card-body" style="height:auto;width: auto;">
                         <table class="table all_event_table" id="event_table_id">
-                            <thead>
-                                <tr>
-                                    <th>event list</th>
-                                </tr>
-                            </thead>
-
-                            <tbody id="all_event_details">
-
-                            </tbody>
                         </table>
                         <div class="mt-4 text-center small">
                             <span class="mr-2">
@@ -140,6 +136,37 @@
                         </div>
                     </div>
                 </div>
+                <div class="card shadow mb-4">
+                    <!-- Card Header - Dropdown -->
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Subscribed Events</h6>
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body" style="height:auto;width: auto;">
+                        <table class="table all_event_table" id="user_event_table_id">
+                        </table>
+                        <div class="mt-4 text-center small">
+                            <span class="mr-2">
+                                <i class="fas fa-circle text-primary"></i> Out door Sports
+                            </span>
+                            <span class="mr-2">
+                                <i class="fas fa-circle text-success"></i> Indoor Sports
+                            </span>
+                            <span class="mr-2">
+                                <i class="fas fa-circle text-info"></i> Movie
+                            </span>
+                            <span class="mr-2">
+                                <i class="fas fa-circle text-secondary"></i> Conference
+                            </span>
+
+                            <span class="mr-2">
+                                <i class="fas fa-circle text-danger"></i> Dinner
+                            </span>
+
+                        </div>
+                    </div>
+                </div>
+
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                         <h6 class="m-0 font-weight-bold text-primary">About Event Management</h6>
