@@ -1,7 +1,7 @@
 #!/bin/puthon
 from event_management.models import UserInfo, EventDetails, CreatedEvents
 import time
-
+from django.db.models.query import QuerySet
 
 class FunctionAPI(object):
     """docstring for FunctionAPI"""
@@ -27,12 +27,27 @@ class FunctionAPI(object):
                 "date_time": eachevent.date_time.strftime("%Y-%m-%d %H:%M:%S"),
                 "event_type": eachevent.event_type
             })
-            # eachevent.delete()
         return self.allEventList
 
+    def get_user_id(self, user_name):
+        try:
+            return UserInfo.objects.filter(user_name=user_name).values()[0]["id"]
+        except Exception:
+            return None
+        
     def get_user_created_events(self, user_name):
         try:
-            return CreatedEvents.objects.get(user_name=user_name)
+            user_created_event_list = list()
+            user_id = self.get_user_id(user_name)
+            event_list = CreatedEvents.objects.filter(user_name_id=user_id).values()
+            if not isinstance(event_list, QuerySet):
+                event_list = [event_list] 
+
+            for event in event_list:
+                user_created_event_list.append(
+                        self.get_event_details(event_id=event[0]))
+
+            return user_created_event_list
         except UserInfo.DoesNotExist:
             return None
 
@@ -52,19 +67,19 @@ class FunctionAPI(object):
         obj.fees = req["fees"]
         try:
             obj.save()
-            print "event_id", obj.id
+            print("event_id", obj.id)
             return obj.id
         except Exception as e:
-            print e
+            print(e)
             raise
 
     def add_created_event_entry(self, user_name, event_id):
         user_details = self.get_user_details(user_name)
         event_details = self.get_event_details(event_id)
         try:
-            print "aaa", event_details.date_time, user_details
+            print(event_details.date_time, user_details)
         except Exception as e:
-            print e,"eeee"
+            print(e.args[0],"eeee")
             raise
         try:
             obj = CreatedEvents()
@@ -72,13 +87,14 @@ class FunctionAPI(object):
             obj.id = event_details
             obj.save()
         except Exception as e:
-            print e,"rr"
+            print(e.args[0],"rr")
 
     def get_event_details(self, event_id):
         try:
             return EventDetails.objects.get(id=event_id)
         except EventDetails.DoesNotExist:
             return None
+
     # def modify_user_event_list(self, user_name, event_id):
     #     user_details = self.get_user_details(user_name)
     #     try:

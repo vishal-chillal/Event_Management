@@ -9,6 +9,7 @@ var handle_fuctions = {
     "signup": handle_registration,
     "dashboard": handle_dashboard
 };
+
 function render_all_events(all_event_list) {
     var array = all_event_list;
     var entries = ["event_name", "location", "capacity", "date_time"]
@@ -25,8 +26,8 @@ function render_all_events(all_event_list) {
     }
     str += "</tr></thead>"
 
-    for (let index = 0; index < array.length; index++) {
-        const element = array[index];
+    for (var index = 0; index < array.length; index++) {
+        var element = array[index];
         str += "<tr>"
         for (var i = 0; i < entries.length; i++) {
             str += "<td>"
@@ -36,17 +37,19 @@ function render_all_events(all_event_list) {
             str += element[entries[i]] + "</td>"
         }
         str += "</tr>"
-    }
-    $("#event_table_id").html(str);
+    };
+    return str;
 }
 
 function handle_dashboard(response, status, user_name) {
-    // console.log(response, status);
-    // handle server is not responding
     if (status == 200) {
-        response = JSON.parse(response)
-        var all_event_list = response.all_events
-        render_all_events(all_event_list);
+        response = JSON.parse(response);
+        var all_event_list = response.all_events;
+        var all_events = render_all_events(all_event_list);
+        $("#event_table_id").html(all_events);
+        var user_created_event_list = response.user_created_events;
+        var user_created_events = render_all_events(user_created_event_list);
+        $("#user_event_table_id").html(user_created_events);        
     }
     else if (status == 200) {
         location.reload()
@@ -94,22 +97,29 @@ function handle_registration(response, status, user_name) {
 
 function excecute_service(request_json, method = "POST") {
     if (request_json == -1) {
-
         var msg = "<h4> Please fill the required fields </h4>"
         $("#errorMsg").html(msg);
         document.getElementById("errorMsg").style.color = "red";
         return;
     }
-    console.log(request_json, typeof (request_json));
+    var pageName = request_json.pageName;
+    var user_name = request_json.user_name;
+
+    if (method == "POST"){
+        request_json = JSON.stringify(request_json);
+        var data_type = "application/JSON";
+
+    }
+    else{
+        data_type = "";
+    }
     $.ajax({
         type: method,
-        dataType: "application/JSON",
-        url: url_dict[request_json.pageName],
-        data: JSON.stringify(request_json),
-        // data: request_json,
+        dataType: data_type,
+        url: url_dict[pageName],
+        data: request_json,
         complete: function (data) {
-            handle_fuctions[request_json.pageName](data.responseText, data.status, request_json.user_name)
+            handle_fuctions[pageName](data.responseText, data.status, user_name)
         }
     });
-
 }

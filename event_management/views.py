@@ -69,7 +69,7 @@ def dashboard(request):
         return HttpResponse("Success", status='201')
 
 
-def events(request):
+def events(request, user=""):
     ''' handle CURD opetration on events '''
     if request.method.upper() == "POST":
         data = ast.literal_eval(request.body)
@@ -87,7 +87,7 @@ def events(request):
             unaware_start_date = datetime.datetime.strptime(event_date, date_format)
             request_data['date_time'] = pytz.utc.localize(unaware_start_date)
 
-            print request_data['date_time'], event_time
+            print(request_data['date_time'], event_time)
             if data.has_key("capacity"):
                 request_data['capacity'] = data["capacity"]
             if data.has_key("description"):
@@ -95,7 +95,7 @@ def events(request):
             if data.has_key("fees"):
                 request_data['fees'] = data["fees"]
         except KeyError as E:
-            resp_msg = E.message + " is not given in the request"
+            resp_msg = E.args[0] + " is not given in the request"
             return HttpResponse(resp_msg, status='400')
         try:
             event_id = func.addEvent(request_data)
@@ -106,14 +106,13 @@ def events(request):
             else:
                 raise Exception("Error")
         except Exception as e:
-            return HttpResponse(e.message, status='400')
+            return HttpResponse(e.args[0], status='400')
 
     elif request.method.upper() == "GET":
         all_events = func.getAllEvents()
-        print(dir(request))
-        print(request.GET,"aa")
-        # print(dir(request.get(url = URL, params = PARAMS)))
-        # user_created_events = func.get_user_created_events()
+        user_name = str(request.GET['user_name'])
+        user_created_events = func.get_user_created_events(user_name)
         response = dict()
         response["all_events"] = all_events
+        response['user_created_events'] = user_created_events
         return HttpResponse(json.dumps(response), status='200')

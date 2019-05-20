@@ -13,12 +13,12 @@ $(document).ready(function (event) {
             window.location.assign("/event/signin.html");
             sessionStorage.setItem("False_attempt", 1);
         }
-        var user_name = sessionStorage.getItem("session");
+        var user_name = session_id;
         $("#user_name").html(user_name.toUpperCase());
         var request_json = new Object()
         request_json["pageName"] = pageName
         request_json["user_name"] = user_name
-        excecute_service(request_json, method = "GET");
+        excecute_service(request_json,"GET");
     }
     if (sessionStorage.getItem("False_attempt") == 1) {
         $("#divCheckLoginSession").html("Unable to find session....Please Login!");
@@ -66,7 +66,6 @@ $(document).ready(function (event) {
 
 
 function set_ddl_value(ddl_value) {
-    console.log(ddl_value);
     $("#event_type_id").html(ddl_value);
     $("#event_type").val(ddl_value);
 }
@@ -97,7 +96,6 @@ function get_pagename() {
 function handle_response(request_json, response) {
     if (request_json['pageName'] == 'home.html') {
         handle_fuctions[request_json['pageName']](response, request_json);
-    } else if (request_json['pageName'] == 'lable.html') {
     } else {
         handle_fuctions[request_json['pageName']](response, request_json['user_name']);
     }
@@ -108,13 +106,13 @@ function create_request(obj, pageName, user_name = "") {
     var request_json = new Object()
 
     for (entry in obj) {
-        // if (document.getElementById(obj[entry]['name']).required && obj[entry]['value'] == "") {
+        if (document.getElementById(obj[entry]['name']).required && obj[entry]['value'] == "") {
 
-        //     input = document.getElementById(obj[entry]['name'])
-        //     input.focus();
-        //     $('#' + obj[entry]['name']).css("border-bottom", "1px solid red")
-        //     return -1;
-        // }
+            input = document.getElementById(obj[entry]['name'])
+            input.focus();
+            $('#' + obj[entry]['name']).css("border-bottom", "1px solid red")
+            return -1;
+        }
         request_json[obj[entry]['name']] = obj[entry]['value']
 
     }
